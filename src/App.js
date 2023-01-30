@@ -1,24 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext } from "react";
+import "antd/dist/reset.css";
+import "./App.css";
 
+import SignIn from "./pages/SignIn";
+import Introduce from "./pages/Introduce";
+import MainLayout from "./pages/MainLayout";
+import ErrorPage from "./pages/ErrorPage";
+import ClinicList from "./pages/ClinicList";
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
+
+import { Store } from "./store/store";
+import EnterpriseList from "./pages/EnterpriseList";
+import RequestForms from "./pages/RequestForms";
+import ExamPackage from "./pages/ExamPackage";
+
+const theme = {
+  maxWidth: "1440px",
+  mainTextColor: "#172B4D",
+};
 function App() {
+  const { state } = useContext(Store);
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: localStorage.getItem("user_id") ? <MainLayout /> : <Introduce />,
+      children: [
+        {
+          path: "/clinic",
+          element: <ClinicList />,
+        },
+        {
+          path: "/enterprise",
+          element: <EnterpriseList />,
+        },
+        {
+          path: "/requestforms",
+          element: <RequestForms />,
+        },
+        {
+          path: "/exampackage",
+          element: <ExamPackage />,
+        },
+      ],
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/signin",
+      element: localStorage.getItem("user_id") ? <MainLayout /> : <SignIn />,
+    },
+  ]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   );
 }
 
