@@ -1,20 +1,23 @@
 import React, { useContext } from "react";
-import "antd/dist/reset.css";
-import "./App.css";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 
+import { ThemeProvider } from "styled-components";
+import { Store } from "./store/store";
 import SignIn from "./pages/SignIn";
 import Introduce from "./pages/Introduce";
 import MainLayout from "./pages/MainLayout";
 import ErrorPage from "./pages/ErrorPage";
 import ClinicList from "./pages/ClinicList";
-
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
-
-import { Store } from "./store/store";
 import EnterpriseList from "./pages/EnterpriseList";
 import RequestForms from "./pages/RequestForms";
 import ExamPackage from "./pages/ExamPackage";
+
+import "antd/dist/reset.css";
+import "./App.css";
 
 const theme = {
   maxWidth: "1440px",
@@ -50,6 +53,10 @@ function App() {
     {
       path: "/signin",
       element: localStorage.getItem("user_id") ? <MainLayout /> : <SignIn />,
+    },
+    {
+      path: "*",
+      element: <Navigate to={"/"} />,
     },
   ]);
   return (

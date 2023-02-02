@@ -1,9 +1,14 @@
 import React, { createContext, useReducer } from "react";
+import { notification } from "antd";
 
 const initialState = { user_id: "", role: "" };
 const Store = createContext();
 
 const StateProvider = ({ children }) => {
+  const [api, contextHolder] = notification.useNotification();
+  const notifi = ({ type, message }) => {
+    return api[type]({ message, placement: "bottomRight" });
+  };
   const [state, dispatch] = useReducer((state, action) => {
     let newState = state;
     switch (action.type) {
@@ -35,7 +40,10 @@ const StateProvider = ({ children }) => {
   }, initialState);
 
   return (
-    <Store.Provider value={{ state, dispatch }}>{children}</Store.Provider>
+    <Store.Provider value={{ state, dispatch, notifi }}>
+      {contextHolder}
+      {children}
+    </Store.Provider>
   );
 };
 

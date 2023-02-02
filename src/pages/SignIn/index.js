@@ -8,7 +8,7 @@ import Navbar from "../../components/Navbar";
 
 import bg from "../../assets/imgs/signInbg.png";
 
-import { loginResquest } from "../../api/postRequest";
+import { loginResquest } from "../../api/loginRequest";
 import { Store } from "../../store/store";
 const SignIn = () => {
   const [hideloading, setHideloading] = useState(false);

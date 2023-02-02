@@ -95,8 +95,8 @@ const MainLayout = () => {
               style={{
                 padding: 24,
                 margin: 0,
-                minHeight: 280,
                 background: colorBgContainer,
+                height: "100%",
               }}
             >
               <Outlet />
