@@ -130,6 +130,12 @@ const ClinicList = () => {
     });
     setDataSource(validateData(newList));
   };
+  const onSearch = (value) => {
+    const searchList = listClinic.filter((clinic) => {
+      return clinic.name.toLowerCase().includes(value.toLowerCase());
+    });
+    setDataSource(searchList);
+  };
   return (
     <ClinicListWrapper>
       <Modal
@@ -331,7 +337,12 @@ const ClinicList = () => {
         </FormWrapper>
       </Modal>
       <Row id="taskbar-row">
-        <Col flex="auto"></Col>
+        <Col>
+          <span className="txt">Tìm kiếm</span>
+        </Col>
+        <Col flex="auto">
+          <Input.Search enterButton onSearch={onSearch} />
+        </Col>
         <Col flex="50px">
           <Button id="add-btn" type="primary" onClick={() => setAddModal(true)}>
             Thêm cơ sở y tế

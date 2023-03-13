@@ -1,10 +1,13 @@
 import styled from "styled-components";
-const RequestFormWrapper = styled.div`
+const ExamPackageWrapper = styled.div`
   height: 100%;
   .content {
     height: calc(100% - 60px);
     overflow-y: scroll;
     overflow-x: hidden;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, auto));
+    gap: 12px;
   }
   .taskbar-row {
     margin-bottom: 24px;
@@ -26,4 +29,4 @@ export const FormWrapper = styled.div`
     justify-content: end;
   }
 `;
-export default RequestFormWrapper;
+export default ExamPackageWrapper;

@@ -14,7 +14,7 @@ import ErrorPage from "./pages/ErrorPage";
 import ClinicList from "./pages/ClinicList";
 import EnterpriseList from "./pages/EnterpriseList";
 import RequestForms from "./pages/RequestForms";
-import ExamPackage from "./pages/ExamPackage";
+import ExamPackage from "./pages/ExamPackages";
 
 import "antd/dist/reset.css";
 import "./App.css";
@@ -44,11 +44,10 @@ function App() {
           element: <RequestForms />,
         },
         {
-          path: "/exampackage",
+          path: "/exampackages",
           element: <ExamPackage />,
         },
-      ],
-      errorElement: <ErrorPage />,
+      ]
     },
     {
       path: "/signin",

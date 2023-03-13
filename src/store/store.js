@@ -10,7 +10,7 @@ const StateProvider = ({ children }) => {
     return api[type]({ message, placement: "bottomRight" });
   };
   const [state, dispatch] = useReducer((state, action) => {
-    let newState = state;
+    let newState;
     switch (action.type) {
       case "login":
         newState = {

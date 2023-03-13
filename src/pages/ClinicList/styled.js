@@ -7,8 +7,12 @@ const ClinicListWrapper = styled.div`
   #taskbar-row {
     margin-bottom: 20px;
     height: 30px;
+    gap: 12px;
     #add-btn {
       width: 100%;
+    }
+    .txt {
+      line-height: 30px;
     }
   }
   #content-row {

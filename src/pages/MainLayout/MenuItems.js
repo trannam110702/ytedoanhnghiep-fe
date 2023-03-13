@@ -15,7 +15,7 @@ const ListMenuItems = [
       },
       {
         key: "goikham",
-        label: <Link to={"/exampackage"}>Danh sách gói khám</Link>,
+        label: <Link to={"/exampackages"}>Danh sách gói khám</Link>,
       },
     ],
   },

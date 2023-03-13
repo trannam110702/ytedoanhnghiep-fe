@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import ExamPackageWrapper, { FormWrapper } from "./styled";
-
+import ExamCard from "../../ExamCard";
+import img from "../../../assets/imgs/examcard.png";
 import {
   Button,
   Col,
@@ -11,99 +12,57 @@ import {
   Select,
   InputNumber,
   Spin,
-  Table,
 } from "antd";
 
-import { getAllEnterpriseResquest } from "../../api/enterpriseRequest";
+import { getAllClinicResquest } from "../../../api/clinicRequest";
 import {
-  addRequestformResquest,
-  getAllRequestformResquest,
-} from "../../api/requestFormRequest";
-import { Store } from "../../store/store";
+  addExampackageResquest,
+  getAllExampackageResquest,
+} from "../../../api/examPackageRequest";
+import { Store } from "../../../store/store";
 const { Option } = Select;
 const ExamPackages = () => {
   const [form] = Form.useForm();
   const { notifi } = useContext(Store);
-  const [listLoading, setListLoading] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loading1, setLoading1] = useState(false);
   const [addModal, setAddModal] = useState(false);
-  const [allRequestForm, setAllRequestForm] = useState([]);
-  const [listEnterprise, setListEnterprise] = useState([]);
+  const [allPackage, setAllPackage] = useState([]);
+  const [listClinic, setListClinic] = useState([]);
   useEffect(() => {
-    setListLoading(true);
+    setLoading(true);
     try {
-      getAllEnterpriseResquest().then((res) => {
-        setListEnterprise(res?.data);
+      getAllClinicResquest().then((res) => {
+        setListClinic(res?.data);
       });
-      getAllRequestformResquest().then((res) => {
-        setAllRequestForm(validate(res?.data));
+      getAllExampackageResquest().then((res) => {
+        setAllPackage(res?.data);
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
-    setListLoading(false);
   }, [addModal]);
   useEffect(() => {
     form.resetFields();
   }, [addModal]);
   const handleSubmit = async (value) => {
     try {
-      setLoading(true);
-      const res = await addRequestformResquest(value);
+      setLoading1(true);
+      const res = await addExampackageResquest(value);
       notifi({ type: "success", message: res.data.message });
     } catch (error) {
       console.log(error);
       notifi({ type: "error", message: "Có lỗi" });
     } finally {
-      setLoading(false);
+      setLoading1(false);
     }
   };
-  const validate = (data) => {
-    return data.map((requestform) => {
-      const date = new Date(requestform.postDate);
-      return {
-        ...requestform,
-        postDate: date.toLocaleDateString(),
-      };
-    });
-  };
-  const columns = [
-    {
-      title: "STT",
-      dataIndex: "stt",
-      key: "stt",
-      render: (text, record, index) => <>{index + 1}</>,
-    },
-    {
-      title: "Tên",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Mã phiếu",
-      dataIndex: "formNumber",
-      key: "formNumber",
-    },
-    {
-      title: "Giá dự kiến (VND)",
-      dataIndex: "price",
-      key: "price",
-    },
-    {
-      title: "Ngày đăng",
-      dataIndex: "postDate",
-      key: "postDate",
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-    },
-  ];
   return (
     <ExamPackageWrapper>
       <Modal
-        title="Tạo phiếu yêu cầu"
+        title="Thêm gói khám"
         open={addModal}
         width={900}
         onCancel={() => setAddModal(false)}
@@ -117,12 +76,12 @@ const ExamPackages = () => {
             onFinish={handleSubmit}
           >
             <Form.Item
-              label="Doanh nghiệp"
+              label="Cơ sở y tế"
               rules={[{ required: true, message: "Cần chọn trường này" }]}
-              name="enterprise"
+              name="clinic"
             >
               <Select
-                placeholder="Chọn Doanh nghiệp"
+                placeholder="Chọn Cơ sở y tế"
                 showSearch
                 filterOption={(input, option) => {
                   return (option?.children.toLowerCase() ?? "").includes(
@@ -135,10 +94,10 @@ const ExamPackages = () => {
                     .localeCompare((optionB?.children ?? "").toLowerCase())
                 }
               >
-                {listEnterprise.map((enterprise) => {
+                {listClinic.map((clinic) => {
                   return (
-                    <Option key={enterprise._id} value={enterprise._id}>
-                      {enterprise.name}
+                    <Option key={clinic._id} value={clinic._id}>
+                      {clinic.name}
                     </Option>
                   );
                 })}
@@ -146,7 +105,7 @@ const ExamPackages = () => {
             </Form.Item>
             <Form.Item
               name="name"
-              label="Tên phiếu yêu cầu"
+              label="Tên gói khám"
               rules={[
                 {
                   required: true,
@@ -157,8 +116,8 @@ const ExamPackages = () => {
               <Input />
             </Form.Item>
             <Form.Item
-              name="formNumber"
-              label="Mã phiếu"
+              name="code"
+              label="Mã gói khám"
               rules={[
                 {
                   required: true,
@@ -170,7 +129,7 @@ const ExamPackages = () => {
             </Form.Item>
             <Form.Item
               name="price"
-              label="Giá dự kiến"
+              label="Giá gói khám"
               rules={[
                 {
                   required: true,
@@ -214,7 +173,7 @@ const ExamPackages = () => {
                   key="submit"
                   type="primary"
                   htmlType="submit"
-                  loading={loading}
+                  loading={loading1}
                 >
                   Thêm
                 </Button>
@@ -223,30 +182,37 @@ const ExamPackages = () => {
           </Form>
         </FormWrapper>
       </Modal>
-      <Row className="taskbar-row">
-        <Col span={4}>
-          <Button
-            className="add-btn"
-            type="primary"
-            onClick={() => {
-              setAddModal(true);
-            }}
-          >
-            Thêm
-          </Button>
-        </Col>
-      </Row>
-      <Row className="content">
-        <Col span={24}>
-          <Table
-            loading={listLoading}
-            columns={columns}
-            dataSource={allRequestForm}
-            pagination={false}
-            bordered
-          ></Table>
-        </Col>
-      </Row>
+      <Spin spinning={loading}>
+        <Row className="taskbar-row">
+          <Col span={4}>
+            <Button
+              className="add-btn"
+              type="primary"
+              onClick={() => {
+                setAddModal(true);
+              }}
+            >
+              Thêm
+            </Button>
+          </Col>
+        </Row>
+        <Row className="content" gutter={[12, 12]}>
+          {allPackage.map((pack) => {
+            const clinic = listClinic.find(
+              (clinic) => clinic._id === pack.clinic
+            );
+            return (
+              <ExamCard
+                img={img}
+                key={pack._id}
+                title={pack.name}
+                clinic={clinic?.name}
+                price={pack.price}
+              />
+            );
+          })}
+        </Row>
+      </Spin>
     </ExamPackageWrapper>
   );
 };
